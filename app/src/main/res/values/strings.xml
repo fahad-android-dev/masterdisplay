@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MasterDisplay</string>
+    <string name="enter_server_details">Enter Server Details</string>
+    <string name="enter_ip_address">Enter ip address</string>
+    <string name="enter_port">Enter port</string>
+    <string name="confirm">Confirm</string>
+    <string name="select_counter">Select Counter</string>
+    <string name="service_config">Service Config</string>
+    <string name="connectivity_settings">CONNECTIVITY SETTINGS</string>
 </resources>

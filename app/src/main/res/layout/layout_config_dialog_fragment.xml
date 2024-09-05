@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/dialogBox"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/edtAddress"
+                    style="@style/CommonInputEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/edt_height"
+                    android:hint="@string/enter_ip_address"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:imeOptions="actionDone"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtMessage" />
+
+                <EditText
+                    android:id="@+id/edtPort"
+                    style="@style/CommonInputEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/edt_height"
+                    android:hint="@string/enter_port"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:imeOptions="actionDone"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edtAddress" />
+
+                <!--<Spinner
+                    android:id="@+id/spinnerSelectCounter"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/edt_height"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:background="@drawable/bg_edit_text"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:padding="8dp"
+                    android:spinnerMode="dropdown"
+                    android:dropDownWidth="match_parent" />-->
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.35"
+                        android:gravity="end|center_vertical"
+                        android:text="Show Ad/Counter/Nothing:" />
+
+                    <Spinner
+                        android:id="@+id/spinnerAdCounter"
+                        android:layout_width="0dip"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.65"
+                        android:ems="10"
+                        android:imeOptions="actionDone"
+                        android:inputType="number" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.35"
+                        android:gravity="end|center_vertical"
+                        android:text="Top:" />
+
+                    <Spinner
+                        android:id="@+id/spinner_top"
+                        android:layout_width="0dip"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.65"
+                        android:ems="10"
+                        android:imeOptions="actionDone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.35"
+                        android:gravity="end|center_vertical"
+                        android:text="ServiceConfig : " />
+
+                    <Spinner
+                        android:id="@+id/spinner_middle"
+                        android:layout_width="0dip"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.65"
+                        android:ems="10"
+                        android:imeOptions="actionDone" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textServiceName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Service Name"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/textBranchName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Branch Name"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.4"
+                        android:gravity="end|center_vertical"
+                        android:hint="Show Logo" />
+
+                    <CheckBox
+                        android:id="@+id/chkLogo"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.1" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.3"
+                        android:gravity="end|center_vertical"
+                        android:hint="Show Time" />
+
+                    <CheckBox
+                        android:id="@+id/chkShowTimeCheckbox"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="0.1"
+                        android:gravity="start|center_vertical" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>
