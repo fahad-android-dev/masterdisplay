@@ -73,9 +73,6 @@ object PrefUtils {
         return runBlocking { dt.getAppConfig().firstOrNull() }
     }
 
-    fun Context.isEnglishLanguage(): Boolean {
-        return getAppConfig()?.lang == "en"
-    }
 
 
     fun Context.saveServerAddress(result: ServerAddressModel) {

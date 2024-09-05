@@ -19,8 +19,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.orbits.masterdisplay.R
 import com.orbits.masterdisplay.databinding.LayoutConfigDialogFragmentBinding
+import com.orbits.masterdisplay.helper.PrefUtils.getAppConfig
 import com.orbits.masterdisplay.helper.PrefUtils.getServerAddress
 import com.orbits.masterdisplay.helper.PrefUtils.saveServerAddress
+import com.orbits.masterdisplay.helper.PrefUtils.setAppConfig
+import com.orbits.masterdisplay.helper.helper_model.AppConfigModel
 import com.orbits.masterdisplay.helper.helper_model.ServerAddressModel
 import com.orbits.masterdisplay.mvvm.main.view.MainActivity
 
@@ -69,8 +72,10 @@ class ConfigDialogFragment : DialogFragment() {
         onClickListeners()
 
         builder.setPositiveButton("Submit") { dialog, id ->
-
+            setPositiveButtonData()
             dialog.cancel()
+            mActivity.finishAffinity()
+            System.exit(0)
 
         }
         builder.setNegativeButton("Cancel") { dialog, id ->
@@ -85,6 +90,16 @@ class ConfigDialogFragment : DialogFragment() {
             binding.edtAddress.setText(mActivity.getServerAddress()?.ipAddress)
             binding.edtPort.setText(mActivity.getServerAddress()?.port)
         }
+
+        binding.chkLogo.isChecked = mActivity.getAppConfig()?.isLogoChecked == true
+    }
+
+    private fun setPositiveButtonData(){
+        mActivity.setAppConfig(
+            AppConfigModel(
+                isLogoChecked = binding.chkLogo.isChecked
+            )
+        )
     }
 
     private fun onClickListeners(){
@@ -113,5 +128,6 @@ class ConfigDialogFragment : DialogFragment() {
                 // No action needed after text change
             }
         })
+
     }
 }

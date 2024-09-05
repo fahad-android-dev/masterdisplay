@@ -9,7 +9,10 @@ import android.os.Environment
 import androidx.activity.OnBackPressedCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.orbits.masterdisplay.R
 import com.orbits.masterdisplay.databinding.ActivityMainBinding
@@ -21,6 +24,7 @@ import com.orbits.masterdisplay.helper.Extensions
 import com.orbits.masterdisplay.helper.FileConfig.createExcelFile
 import com.orbits.masterdisplay.helper.NetworkChecker
 import com.orbits.masterdisplay.helper.NetworkMonitor
+import com.orbits.masterdisplay.helper.PrefUtils.getAppConfig
 import com.orbits.masterdisplay.helper.PrefUtils.getServerAddress
 import com.orbits.masterdisplay.helper.interfaces.AlertDialogInterface
 import com.orbits.masterdisplay.helper.interfaces.NetworkListener
@@ -67,12 +71,29 @@ class MainActivity : BaseActivity()  , NetworkListener {
             }
         }
 
+        initData()
+
 
 
         onBackPressedDispatcher.addCallback(this@MainActivity, object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
             }
         })
+    }
+
+    private fun initData(){
+        if (getAppConfig()?.isLogoChecked != true){
+            hideLogoFragment()
+        }
+
+    }
+
+    private fun hideLogoFragment() {
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+        val fragment = fragmentManager.findFragmentById(R.id.fragmentLogo)
+        fragment?.let { fragmentTransaction.hide(it) }
+        fragmentTransaction.commit()
     }
 
     private fun onClickListeners(){
@@ -88,7 +109,7 @@ class MainActivity : BaseActivity()  , NetworkListener {
             if (isExternalStorageAvailable) {
                 val companyLogoFile = File(
                     Environment.getExternalStorageDirectory()
-                        .toString() + "/MasterDisplay_Config/Company_Images"
+                        .toString() + "/MasterDisplay_Config/Company_Logo"
                 )
                 if (!companyLogoFile.exists()) {
                     companyLogoFile.mkdirs()

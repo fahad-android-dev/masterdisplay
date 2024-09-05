@@ -24,6 +24,5 @@ data class Device(
 )
 
 data class AppConfigModel(
-    var lang :String = "en",
-    var cartBadgeCount :String = "0"
+    var isLogoChecked: Boolean = false,
 )

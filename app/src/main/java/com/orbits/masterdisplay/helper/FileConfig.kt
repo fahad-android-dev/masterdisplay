@@ -77,7 +77,7 @@ object FileConfig {
 
             val file = File(
                 Environment.getExternalStorageDirectory()
-                    .toString() + "/MasterDisplay_Config/Company_Images"
+                    .toString() + "/MasterDisplay_Config/Company_Logo"
             )
             if (file.isDirectory) {
                 listFile = file.listFiles()
