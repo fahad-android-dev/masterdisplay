@@ -13,22 +13,24 @@ object FileConfig {
 
     var image_FileNames: Array<String?>? = null
     var image_FilePaths: Array<String?>? = null
+    var video_FileNames: Array<String?>? = null
+    var video_FilePaths: Array<String?>? = null
 
     fun createExcelFile(filePath: String) {
         val workbook: Workbook = XSSFWorkbook()
         val sheet: Sheet = workbook.createSheet("Sheet 1")
 
-       /* // Example of setting data
+        // Example of setting data
         val rowOne = sheet.createRow(0)
-        rowOne.createCell(0).setCellValue(Constants.TICKET_TILES_COLOR)
-        rowOne.createCell(1).setCellValue("#E8F0FE")
+        rowOne.createCell(0).setCellValue(Constants.SCROLL_TEXT)
+        rowOne.createCell(1).setCellValue("Put your scrolling text in excel file value. Have a great day!!!")
 
         // Example of setting data
         val rowTwo = sheet.createRow(2)
-        rowTwo.createCell(0).setCellValue(Constants.TICKET_TILES_TEXT_COLOR)
-        rowTwo.createCell(1).setCellValue("#FF0000")
+        rowTwo.createCell(0).setCellValue(Constants.SCROLL_TEXT_COLOR)
+        rowTwo.createCell(1).setCellValue("#F7B5CA")
 
-        val rowThree = sheet.createRow(4)
+        /*val rowThree = sheet.createRow(4)
         rowThree.createCell(0).setCellValue(Constants.TICKET_CONFIRM_COLOR)
         rowThree.createCell(1).setCellValue("#F7B5CA")*/
 
@@ -69,7 +71,7 @@ object FileConfig {
         return colors
     }
 
-    fun readImageFile() {
+    fun readImageFile(fileName:String) {
         try {
             val listFile: Array<File>
             image_FileNames = null
@@ -77,7 +79,7 @@ object FileConfig {
 
             val file = File(
                 Environment.getExternalStorageDirectory()
-                    .toString() + "/MasterDisplay_Config/Company_Logo"
+                    .toString() + fileName
             )
             if (file.isDirectory) {
                 listFile = file.listFiles()
@@ -91,6 +93,37 @@ object FileConfig {
                     image_FilePaths!![i] = listFile[i].absolutePath
                     // Get the name
                     image_FileNames!![i] = listFile[i].name
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun readVideoFile() {
+        try {
+            val listFile: Array<File>
+            video_FileNames = null
+            video_FilePaths = null
+            val vidDir = File(
+                Environment.getExternalStorageDirectory()
+                    .toString() + "/MasterDisplay_Config/Advertise videos"
+            )
+            if (vidDir.isDirectory) {
+                val vidFiles = vidDir.list()
+                if (vidFiles?.size != 0) {
+                    listFile = vidDir.listFiles() as Array<File>
+                    // List file path for videos
+                    video_FilePaths = arrayOfNulls(listFile.size)
+                    // List file path for video file names
+                    video_FileNames = arrayOfNulls(listFile.size)
+
+                    for (i in listFile.indices) {
+                        // Get the path
+                        video_FilePaths!![i] = listFile[i].absolutePath
+                        // Get the name
+                        video_FileNames!![i] = listFile[i].name
+                    }
                 }
             }
         } catch (e: Exception) {

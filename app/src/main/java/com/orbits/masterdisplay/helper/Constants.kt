@@ -21,16 +21,37 @@ object Constants {
     const val TOOLBAR_ICON_ONE = "iconOne"
     const val TOOLBAR_ICON_TWO = "iconTwo"
     const val TOOLBAR_ICON_MENU = "iconMenu"
-    const val TOOLBAR_ICON_BACK = "iconBack"
 
 
+    /*Voices Config Ids*/
+
+    const val ENGLISH = "1"
+    const val ARABIC = "2"
+    const val ENGLISH_ARABIC = "3"
+    const val ARABIC_ENGLISH = "4"
+
+    const val MALE = "M"
+    const val FEMALE = "F"
 
 
-    const val APP_SETTING_PASSWORD = "keypad"
 
     val configFile = File(
         Environment.getExternalStorageDirectory()
             .toString() + "/MasterDisplay_Config/Config.xls"
     )
+
+    const val SCROLL_TEXT = "ScrollText"
+    const val SCROLL_TEXT_COLOR = "ScrollTextColor"
+
+
+
+
+    const val COUNTER_TILE_COLOR = "CounterTileColor"
+    const val COUNTER_TILE_TEXT_COLOR = "CounterTileTextColor"
+    const val COUNTER_TILE_RADIUS = "CounterTileRadius"
+
+    const val TOKEN_TILE_COLOR = "TokenTileColor"
+    const val TOKEN_TILE_TEXT_COLOR = "TokenTileTextColor"
+    const val TOKEN_TILE_RADIUS = "TokenTileRadius"
 
 }

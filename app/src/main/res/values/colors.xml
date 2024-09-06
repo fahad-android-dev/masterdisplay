@@ -78,5 +78,8 @@
     <color name="yellow_color">#ecb91e</color>
     <color name="black_grey_color">#333333</color>
 
+    <color name="colorChecked">@color/color_black</color> <!-- Your desired checked color -->
+    <color name="colorUnchecked">#808080</color> <!-- Your desired unchecked color -->
+
 
 </resources>

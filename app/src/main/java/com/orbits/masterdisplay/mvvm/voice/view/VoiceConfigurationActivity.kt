@@ -1,4 +1,4 @@
-package com.orbits.masterdisplay.helper
+package com.orbits.masterdisplay.mvvm.voice.view
 
 import android.os.Bundle
 import android.widget.EditText
@@ -7,39 +7,34 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import com.orbits.masterdisplay.R
-import com.orbits.masterdisplay.databinding.LayoutConfigDialogFragmentBinding
-import com.orbits.masterdisplay.helper.PrefUtils.getAppConfig
-import com.orbits.masterdisplay.helper.PrefUtils.getServerAddress
+import com.orbits.masterdisplay.databinding.ActivityVoiceConfigurationBinding
+import com.orbits.masterdisplay.helper.BaseActivity
+import com.orbits.masterdisplay.helper.Constants
 import com.orbits.masterdisplay.helper.PrefUtils.getUserDataResponse
-import com.orbits.masterdisplay.helper.PrefUtils.saveServerAddress
-import com.orbits.masterdisplay.helper.PrefUtils.setAppConfig
 import com.orbits.masterdisplay.helper.PrefUtils.setUserDataResponse
-import com.orbits.masterdisplay.helper.helper_model.AppConfigModel
-import com.orbits.masterdisplay.helper.helper_model.ServerAddressModel
 import com.orbits.masterdisplay.helper.helper_model.UserResponseModel
+import com.orbits.masterdisplay.helper.interfaces.CommonInterfaceClickEvent
 
-class ConfigDialogFragment : BaseActivity() {
-    private lateinit var binding: LayoutConfigDialogFragmentBinding
+class VoiceConfigurationActivity : BaseActivity() {
+    private lateinit var binding: ActivityVoiceConfigurationBinding
     var gender = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.layout_config_dialog_fragment)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_voice_configuration)
 
+        initializeToolbar()
         initializeFields()
         onClickListeners()
+
     }
 
 
+    private fun initializeToolbar() {
+
+    }
+
     private fun initializeFields(){
-        if (getServerAddress()?.ipAddress?.isNotEmpty() == true){
-            binding.edtAddress.setText(getServerAddress()?.ipAddress)
-            binding.edtPort.setText(getServerAddress()?.port)
-        }
-        binding.chkLogo.isChecked = getAppConfig()?.isLogoChecked == true
-
-        // voice data
-
         binding.edtEnglishMessage.setText(getUserDataResponse()?.msg_en)
         binding.edtArabicMessage.setText(getUserDataResponse()?.msg_ar)
 
@@ -75,44 +70,12 @@ class ConfigDialogFragment : BaseActivity() {
         }
     }
 
-    private fun setPositiveButtonData(){
-        setAppConfig(
-            AppConfigModel(
-                isLogoChecked = binding.chkLogo.isChecked
-            )
-        )
-
-        saveServerAddress(
-            ServerAddressModel(
-                ipAddress = binding.edtAddress.text.toString(), port = binding.edtPort.text.toString()
-
-            )
-        )
-
-        setUserDataResponse(
-            UserResponseModel(
-                voice_selected =
-                when {
-                    binding.ivEnglish.isVisible -> Constants.ENGLISH
-                    binding.ivArabic.isVisible -> Constants.ARABIC
-                    binding.ivEnglishArabic.isVisible -> Constants.ENGLISH_ARABIC
-                    binding.ivArabicEnglish.isVisible -> Constants.ARABIC_ENGLISH
-                    else -> Constants.ENGLISH
-                },
-                msg_en = binding.edtEnglishMessage.text.toString(),
-                msg_ar = binding.edtArabicMessage.text.toString(),
-                voice_gender = gender
-            )
-        )
-    }
-
     private fun onClickListeners(){
         binding.conEnglish.setOnClickListener {
             showSelected(binding.ivEnglish)
             showSelectedEditText(listOf(binding.edtEnglishMessage))
             showSelectedTokenCounters(listOf(binding.linTokenCounterEn))
         }
-
         binding.conArabic.setOnClickListener {
             showSelected(binding.ivArabic)
             showSelectedEditText(listOf(binding.edtArabicMessage))
@@ -180,11 +143,23 @@ class ConfigDialogFragment : BaseActivity() {
         }
 
         binding.btnConfirm.setOnClickListener {
-            setPositiveButtonData()
-            finishAffinity()
-            System.exit(0)
+            setUserDataResponse(
+                UserResponseModel(
+                    voice_selected =
+                    when {
+                        binding.ivEnglish.isVisible -> Constants.ENGLISH
+                        binding.ivArabic.isVisible -> Constants.ARABIC
+                        binding.ivEnglishArabic.isVisible -> Constants.ENGLISH_ARABIC
+                        binding.ivArabicEnglish.isVisible -> Constants.ARABIC_ENGLISH
+                        else -> Constants.ENGLISH
+                    },
+                    msg_en = binding.edtEnglishMessage.text.toString(),
+                    msg_ar = binding.edtArabicMessage.text.toString(),
+                    voice_gender = gender
+                )
+            )
+            finish()
         }
-
     }
 
     private fun showSelected(imageViewToShow: ImageView) {
@@ -206,7 +181,7 @@ class ConfigDialogFragment : BaseActivity() {
             binding.edtEnglishMessage,
             binding.edtArabicMessage,
 
-            )
+        )
 
         allEditTexts.forEach { it.isVisible = false }
 

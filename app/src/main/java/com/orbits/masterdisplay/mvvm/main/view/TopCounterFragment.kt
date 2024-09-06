@@ -9,12 +9,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.orbits.masterdisplay.R
 import com.orbits.masterdisplay.databinding.FragmentLogoBinding
+import com.orbits.masterdisplay.databinding.FragmentTopCounterBinding
 import com.orbits.masterdisplay.helper.FileConfig.image_FilePaths
 import com.orbits.masterdisplay.helper.FileConfig.readImageFile
 
-class LogoFragment : Fragment() {
+class TopCounterFragment : Fragment() {
     private lateinit var mActivity: MainActivity
-    private lateinit var binding : FragmentLogoBinding
+    private lateinit var binding : FragmentTopCounterBinding
     private var pos = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +28,7 @@ class LogoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_logo, container, false)
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_top_counter, container, false)
         return binding.root
     }
 
@@ -43,8 +44,8 @@ class LogoFragment : Fragment() {
             if (files != null) {
                 for (file in files) {
                     when (file?.substring(file.lastIndexOf("/") + 1, file.lastIndexOf("."))) {
-                        "left" -> {
-                            binding.ivCompanyLogo.setImageDrawable(Drawable.createFromPath(file))
+                        "right" -> {
+                           binding.img.setImageDrawable(Drawable.createFromPath(file))
                         }
                     }
 

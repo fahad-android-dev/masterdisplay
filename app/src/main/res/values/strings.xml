@@ -9,4 +9,15 @@
     <string name="connectivity_settings">CONNECTIVITY SETTINGS</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="male_voice">Male voice</string>
+    <string name="female_voice">Female Voice</string>
+    <string name="english">English</string>
+    <string name="arabic">Arabic</string>
+    <string name="english_first_arabic_second">English First Arabic Second</string>
+    <string name="arabic_first_english_second">Arabic First English Second</string>
+    <string name="token">Token</string>
+    <string name="counter">Counter</string>
+    <string name="enter_english_message">Enter english message</string>
+    <string name="enter_arabic_message">Enter arabic message</string>
+    <string name="app_settings">App Settings</string>
 </resources>

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 class NetworkChecker(private val context: Context) {
 
     private val executor = Executors.newSingleThreadScheduledExecutor()
-    private val checkInterval = 20L // seconds
+    private val checkInterval = 10L // seconds
     private var networkListener :  NetworkListener?= null
 
     fun setNetworkListener(listener: NetworkListener) {

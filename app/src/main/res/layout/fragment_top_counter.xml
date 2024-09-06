@@ -13,7 +13,7 @@
         tools:context=".mvvm.main.view.LogoFragment">
 
         <ImageView
-            android:id="@+id/ivCompanyLogo"
+            android:id="@+id/img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
