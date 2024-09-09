@@ -18,6 +18,7 @@ class MainViewModel : ViewModel() , MessageListener {
     var dataModel: JsonObject? = null
     var dataList = ArrayList<ItemListDataModel>()
     private var reconnectionListener :  ReconnectionListener?= null
+    var isNext = false
 
     fun setReconnectionListener(listener: ReconnectionListener) {
         this.reconnectionListener = listener
@@ -59,6 +60,7 @@ class MainViewModel : ViewModel() , MessageListener {
 
         println("here is msg $jsonObject")
 
+        isNext = jsonObject.has(",msg")
 
         if (jsonObject.has("transaction")){
             dataModel = jsonObject

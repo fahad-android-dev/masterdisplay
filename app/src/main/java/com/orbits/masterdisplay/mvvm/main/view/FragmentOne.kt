@@ -79,6 +79,7 @@ class FragmentOne : Fragment() {
                     }
                     mediaPlayer.isLooping = false
                     mediaPlayer.start()
+                    mediaPlayer.setVolume(0f, 0f)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

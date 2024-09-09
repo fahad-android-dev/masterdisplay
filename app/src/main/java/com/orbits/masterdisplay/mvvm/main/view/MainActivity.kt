@@ -2,6 +2,7 @@ package com.orbits.masterdisplay.mvvm.main.view
 
 import android.Manifest
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -53,6 +54,13 @@ class MainActivity : BaseActivity()  , NetworkListener, TextToSpeech.OnInitListe
         networkChecker = NetworkChecker(this)
         networkChecker?.setNetworkListener(this)
         textToSpeech = TextToSpeech(this, this)
+
+        if (getAppConfig()?.isPortraitChecked != true){
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }else {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+
 
         initializeFields()
         onClickListeners()
@@ -290,7 +298,8 @@ class MainActivity : BaseActivity()  , NetworkListener, TextToSpeech.OnInitListe
     }
 
 
-    private fun callTokens(token:String,counterId: String){
+    fun callTokens(token:String,counterId: String){
+        println("here is token called")
         val customMsgEn =
             getUserDataResponse()?.msg_en
                 ?.replace("<token>", token)
@@ -300,6 +309,8 @@ class MainActivity : BaseActivity()  , NetworkListener, TextToSpeech.OnInitListe
             getUserDataResponse()?.msg_ar
                 ?.replace("<token>", token)
                 ?.replace("<counter>", counterId)
+
+        println("here is token called voice ${getUserDataResponse()?.voice_selected}")
 
         when (getUserDataResponse()?.voice_selected) {
             Constants.ENGLISH -> {

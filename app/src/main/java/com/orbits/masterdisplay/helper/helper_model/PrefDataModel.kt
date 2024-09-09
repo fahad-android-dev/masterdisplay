@@ -25,4 +25,7 @@ data class Device(
 
 data class AppConfigModel(
     var isLogoChecked: Boolean = false,
+    var isPortraitChecked: Boolean = false,
+    var isTimeChecked: Boolean = false,
+    var isScrollArabic: Boolean = false,
 )

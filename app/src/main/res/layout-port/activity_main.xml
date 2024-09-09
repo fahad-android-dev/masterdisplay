@@ -40,7 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:padding="@dimen/_12sdp">
+                android:padding="@dimen/_12sdp"
+                >
 
                 <fragment
                     android:id="@+id/fragmentTwo"
@@ -49,7 +50,9 @@
                     android:layout_height="match_parent"
                     tools:layout="@layout/fragment_two" />
 
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </LinearLayout>
 
@@ -70,7 +73,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:scrollHorizontally="true"
-            android:singleLine="true" />
+            android:singleLine="true"
+            />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

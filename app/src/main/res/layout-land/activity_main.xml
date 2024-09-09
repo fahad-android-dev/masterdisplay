@@ -46,8 +46,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.4"
-                        android:padding="@dimen/_15sdp">
+                        android:layout_weight="0.4">
 
                         <fragment
                             android:id="@+id/fragmentOne"

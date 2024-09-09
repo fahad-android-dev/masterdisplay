@@ -25,10 +25,10 @@ object Constants {
 
     /*Voices Config Ids*/
 
-    const val ENGLISH = "1"
-    const val ARABIC = "2"
-    const val ENGLISH_ARABIC = "3"
-    const val ARABIC_ENGLISH = "4"
+    const val ENGLISH = "English"
+    const val ARABIC = "Arabic"
+    const val ENGLISH_ARABIC = "English First Arabic Second"
+    const val ARABIC_ENGLISH = "Arabic First English Second"
 
     const val MALE = "M"
     const val FEMALE = "F"

@@ -12,6 +12,10 @@ import com.orbits.masterdisplay.databinding.FragmentLogoBinding
 import com.orbits.masterdisplay.databinding.FragmentTopCounterBinding
 import com.orbits.masterdisplay.helper.FileConfig.image_FilePaths
 import com.orbits.masterdisplay.helper.FileConfig.readImageFile
+import com.orbits.masterdisplay.helper.PrefUtils.getAppConfig
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class TopCounterFragment : Fragment() {
     private lateinit var mActivity: MainActivity
@@ -52,5 +56,7 @@ class TopCounterFragment : Fragment() {
                 }
             }
         }
+
     }
+
 }

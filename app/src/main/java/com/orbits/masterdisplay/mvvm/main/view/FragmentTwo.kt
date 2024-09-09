@@ -15,9 +15,13 @@ import com.orbits.masterdisplay.databinding.FragmentTwoBinding
 import com.orbits.masterdisplay.helper.Extensions
 import com.orbits.masterdisplay.helper.FileConfig.image_FilePaths
 import com.orbits.masterdisplay.helper.FileConfig.readImageFile
+import com.orbits.masterdisplay.helper.PrefUtils.getAppConfig
 import com.orbits.masterdisplay.helper.interfaces.ReconnectionListener
 import com.orbits.masterdisplay.mvvm.main.adapter.CounterListAdapter
 import com.orbits.masterdisplay.mvvm.main.model.ItemListDataModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class FragmentTwo : Fragment() , ReconnectionListener{
     private lateinit var mActivity: MainActivity
@@ -89,9 +93,28 @@ class FragmentTwo : Fragment() , ReconnectionListener{
 
     private fun setData(list: ArrayList<ItemListDataModel>) {
         arrListItems.clear()
-        arrListItems.addAll(list)
+        arrListItems.addAll(list.reversed())
+        if (mActivity.viewModel.isNext){
+            println("here is list is not empty")
+            Extensions.handler(300){
+                mActivity.callTokens(
+                    arrListItems[0].token ?: "",
+                    arrListItems[0].counterId ?: ""
+                )
+            }
+        }
 
         adapter.setData(arrListItems)
+
+        if (mActivity.getAppConfig()?.isTimeChecked == true){
+            binding.txtDateTime.text = getCurrentDateTime()
+        }
+    }
+
+    private fun getCurrentDateTime(): String {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm aa", Locale.getDefault())
+        return dateFormat.format(calendar.time)
     }
 
     override fun onConnectionRestarted() {

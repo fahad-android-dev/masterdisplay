@@ -121,7 +121,6 @@
 
         </androidx.core.widget.NestedScrollView>
 
-
         <TextView
             android:id="@+id/txtDateTime"
             style="@style/TextStyleEndSemiBold"

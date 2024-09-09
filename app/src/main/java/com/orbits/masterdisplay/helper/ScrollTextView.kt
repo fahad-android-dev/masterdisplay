@@ -5,135 +5,119 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.animation.LinearInterpolator
 import android.widget.Scroller
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
+import com.orbits.masterdisplay.helper.PrefUtils.getAppConfig
+import java.util.Locale
 
-class ScrollTextView(context: Context?, attrs: AttributeSet?, defStyle: Int) : androidx.appcompat.widget.AppCompatTextView(
+class ScrollTextView(context: Context?, attrs: AttributeSet?, defStyle: Int) : AppCompatTextView(
     context!!, attrs, defStyle) {
-    // scrolling feature
+
+    // Scrolling feature
     private var mSlr: Scroller? = null
 
-    // milliseconds for a round of scrolling
+    // Milliseconds for a round of scrolling
     var rndDuration: Int = 20000
 
-    // the X offset when paused
+    // The X offset when paused
     private var mXPaused = 0
 
-    // whether it's being paused
+    // Whether it's being paused
     var isPaused: Boolean = true
         private set
 
-    /*
-	 * constructor
-	 */
+    // Constructor
     constructor(context: Context?) : this(context, null) {
-        // customize the TextView
-        setSingleLine()
-        ellipsize = null
-        visibility = INVISIBLE
+        initTextView()
     }
 
-    /*
-	 * constructor
-	 */
-    constructor(context: Context?, attrs: AttributeSet?) : this(
-        context,
-        attrs,
-        android.R.attr.textViewStyle
-    ) {
-        // customize the TextView
-        setSingleLine()
-        ellipsize = null
-        visibility = INVISIBLE
+    // Constructor
+    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, android.R.attr.textViewStyle) {
+        initTextView()
     }
 
-    /*
-	 * constructor
-	 */
     init {
-        // customize the TextView
+        initTextView()
+    }
+
+    // Initialize the TextView
+    private fun initTextView() {
         setSingleLine()
         ellipsize = null
         visibility = INVISIBLE
     }
 
     /**
-     * begin to scroll the text from the original position
+     * Begin to scroll the text from the original position
      */
     fun startScroll() {
-        // begin from the very right side
-        mXPaused = -1 * width
-        // assume it's paused
+        mXPaused = if (context?.getAppConfig()?.isScrollArabic == true) {
+            width // Start from the right side for Arabic text
+        } else {
+            -1 * width // Start from the left side for other languages
+        }
         isPaused = true
         resumeScroll()
     }
 
     /**
-     * resume the scroll from the pausing point
+     * Resume the scroll from the pausing point
      */
     fun resumeScroll() {
         if (!isPaused) return
 
-        // Do not know why it would not scroll sometimes
-        // if setHorizontallyScrolling is called in constructor.
+        // Enable horizontal scrolling
         setHorizontallyScrolling(true)
 
-        // use LinearInterpolator for steady scrolling
+        // Use LinearInterpolator for steady scrolling
         mSlr = Scroller(this.context, LinearInterpolator())
         setScroller(mSlr)
 
         val scrollingLen = calculateScrollingLen()
-        val distance = scrollingLen - (width + mXPaused)
-        val duration = (rndDuration * distance * 1.00000
-                / scrollingLen).toInt()
+        val distance = if (context?.getAppConfig()?.isScrollArabic == true) {
+            scrollingLen + mXPaused // Right to left scrolling for Arabic
+        } else {
+            scrollingLen - (width + mXPaused) // Left to right scrolling for other languages
+        }
+
+        // Adjust duration according to the distance
+        val duration = (rndDuration * distance * 1.0 / scrollingLen).toInt()
         visibility = VISIBLE
-        mSlr!!.startScroll(mXPaused, 0, distance, 0, duration)
+        mSlr!!.startScroll(mXPaused, 0, if (context?.getAppConfig()?.isScrollArabic == true) -distance else distance, 0, duration)
         isPaused = false
     }
 
     /**
-     * calculate the scrolling length of the text in pixel
+     * Calculate the scrolling length of the text in pixels
      *
      * @return the scrolling length in pixels
      */
     private fun calculateScrollingLen(): Int {
         val tp = paint
-        var rect: Rect? = Rect()
+        val rect = Rect()
         val strTxt = text.toString()
         tp.getTextBounds(strTxt, 0, strTxt.length, rect)
-        val scrollingLen = rect!!.width() + width
-        rect = null
-        return scrollingLen
+        return rect.width() + width
     }
 
     /**
-     * pause scrolling the text
+     * Pause scrolling the text
      */
     fun pauseScroll() {
-        if (null == mSlr) return
-
-        if (isPaused) return
+        if (mSlr == null || isPaused) return
 
         isPaused = true
-
-        // abortAnimation sets the current X to be the final X,
-        // and sets isFinished to be true
-        // so current position shall be saved
         mXPaused = mSlr!!.currX
-
         mSlr!!.abortAnimation()
     }
 
-    /*
-	 * override the computeScroll to restart scrolling when finished so as that
-	 * the text is scrolled forever
-	 */ override fun computeScroll() {
+    /**
+     * Override the computeScroll to restart scrolling when finished to ensure the text scrolls forever
+     */
+    override fun computeScroll() {
         super.computeScroll()
-
-        if (null == mSlr) return
-
-        if (mSlr!!.isFinished && (!isPaused)) {
-            this.startScroll()
+        if (mSlr != null && mSlr!!.isFinished && !isPaused) {
+            startScroll()
         }
     }
-}
 
+}

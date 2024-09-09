@@ -1,6 +1,10 @@
 package com.orbits.masterdisplay.helper
 
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -21,6 +25,7 @@ import com.orbits.masterdisplay.helper.helper_model.UserResponseModel
 class ConfigDialogFragment : BaseActivity() {
     private lateinit var binding: LayoutConfigDialogFragmentBinding
     var gender = ""
+    var selectedOption = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +37,15 @@ class ConfigDialogFragment : BaseActivity() {
 
 
     private fun initializeFields(){
+        setSpinner()
         if (getServerAddress()?.ipAddress?.isNotEmpty() == true){
             binding.edtAddress.setText(getServerAddress()?.ipAddress)
             binding.edtPort.setText(getServerAddress()?.port)
         }
         binding.chkLogo.isChecked = getAppConfig()?.isLogoChecked == true
+        binding.chkPortrait.isChecked = getAppConfig()?.isPortraitChecked == true
+        binding.chkDateTime.isChecked = getAppConfig()?.isTimeChecked == true
+        binding.chkScroll.isChecked = getAppConfig()?.isScrollArabic == true
 
         // voice data
 
@@ -53,22 +62,18 @@ class ConfigDialogFragment : BaseActivity() {
 
         when (getUserDataResponse()?.voice_selected) {
             Constants.ENGLISH -> {
-                showSelected(binding.ivEnglish)
                 showSelectedEditText(listOf(binding.edtEnglishMessage))
                 showSelectedTokenCounters(listOf(binding.linTokenCounterEn))
             }
             Constants.ARABIC -> {
-                showSelected(binding.ivArabic)
                 showSelectedEditText(listOf(binding.edtArabicMessage))
                 showSelectedTokenCounters(listOf(binding.linTokenCounterAr))
             }
             Constants.ENGLISH_ARABIC -> {
-                showSelected(binding.ivEnglishArabic)
                 showSelectedEditText(listOf(binding.edtEnglishMessage,binding.edtArabicMessage))
                 showSelectedTokenCounters(listOf(binding.linTokenCounterEn,binding.linTokenCounterAr))
             }
             Constants.ARABIC_ENGLISH -> {
-                showSelected(binding.ivArabicEnglish)
                 showSelectedEditText(listOf(binding.edtEnglishMessage,binding.edtArabicMessage))
                 showSelectedTokenCounters(listOf(binding.linTokenCounterEn,binding.linTokenCounterAr))
             }
@@ -78,7 +83,10 @@ class ConfigDialogFragment : BaseActivity() {
     private fun setPositiveButtonData(){
         setAppConfig(
             AppConfigModel(
-                isLogoChecked = binding.chkLogo.isChecked
+                isLogoChecked = binding.chkLogo.isChecked,
+                isPortraitChecked = binding.chkPortrait.isChecked,
+                isTimeChecked = binding.chkDateTime.isChecked,
+                isScrollArabic = binding.chkScroll.isChecked
             )
         )
 
@@ -88,17 +96,10 @@ class ConfigDialogFragment : BaseActivity() {
 
             )
         )
-
+        println("here is selected option $selectedOption")
         setUserDataResponse(
             UserResponseModel(
-                voice_selected =
-                when {
-                    binding.ivEnglish.isVisible -> Constants.ENGLISH
-                    binding.ivArabic.isVisible -> Constants.ARABIC
-                    binding.ivEnglishArabic.isVisible -> Constants.ENGLISH_ARABIC
-                    binding.ivArabicEnglish.isVisible -> Constants.ARABIC_ENGLISH
-                    else -> Constants.ENGLISH
-                },
+                voice_selected = selectedOption,
                 msg_en = binding.edtEnglishMessage.text.toString(),
                 msg_ar = binding.edtArabicMessage.text.toString(),
                 voice_gender = gender
@@ -107,7 +108,7 @@ class ConfigDialogFragment : BaseActivity() {
     }
 
     private fun onClickListeners(){
-        binding.conEnglish.setOnClickListener {
+       /* binding.conEnglish.setOnClickListener {
             showSelected(binding.ivEnglish)
             showSelectedEditText(listOf(binding.edtEnglishMessage))
             showSelectedTokenCounters(listOf(binding.linTokenCounterEn))
@@ -129,7 +130,8 @@ class ConfigDialogFragment : BaseActivity() {
             showSelected(binding.ivArabicEnglish)
             showSelectedEditText(listOf(binding.edtEnglishMessage,binding.edtArabicMessage))
             showSelectedTokenCounters(listOf(binding.linTokenCounterEn,binding.linTokenCounterAr))
-        }
+        }*/
+
         binding.switchMale.setOnCheckedChangeListener { view, isChecked ->
             if (isChecked) {
                 gender = Constants.MALE
@@ -224,5 +226,60 @@ class ConfigDialogFragment : BaseActivity() {
         allLinear.forEach { it.isVisible = false }
 
         tokenCounters.forEach { it.isVisible = true }
+    }
+
+    private fun setSpinner(){
+        val options: MutableList<String> = ArrayList()
+        options.add("English")
+        options.add("Arabic")
+        options.add("English First Arabic Second")
+        options.add("Arabic First English Second")
+
+        val topAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
+        topAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerSelectConfig.adapter = topAdapter
+
+
+        binding.spinnerSelectConfig.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                selectedOption = parent.getItemAtPosition(position).toString()
+                when (selectedOption) {
+                    "English" -> {
+                        showSelectedEditText(listOf(binding.edtEnglishMessage))
+                        showSelectedTokenCounters(listOf(binding.linTokenCounterEn))
+                    }
+                    "Arabic" ->{
+                        showSelectedEditText(listOf(binding.edtArabicMessage))
+                        showSelectedTokenCounters(listOf(binding.linTokenCounterAr))
+                    }
+                    "English First Arabic Second" -> {
+                        showSelectedEditText(listOf(binding.edtEnglishMessage,binding.edtArabicMessage))
+                        showSelectedTokenCounters(listOf(binding.linTokenCounterEn,binding.linTokenCounterAr))
+                    }
+                    "Arabic First English Second" -> {
+                        showSelectedEditText(listOf(binding.edtEnglishMessage,binding.edtArabicMessage))
+                        showSelectedTokenCounters(listOf(binding.linTokenCounterEn,binding.linTokenCounterAr))
+                    }
+                    else -> {}
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Handle case when nothing is selected
+            }
+        }
+
+        for (i in options.indices) {
+            println("here is voice selected ${getUserDataResponse()?.voice_selected}")
+            println("here is options selected ${options[i]}")
+            if (getUserDataResponse()?.voice_selected == options[i]) {
+                binding.spinnerSelectConfig.setSelection(i)
+            }
+        }
     }
 }
