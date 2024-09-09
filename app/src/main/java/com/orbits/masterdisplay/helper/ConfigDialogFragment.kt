@@ -51,6 +51,7 @@ class ConfigDialogFragment : BaseActivity() {
 
         binding.edtEnglishMessage.setText(getUserDataResponse()?.msg_en)
         binding.edtArabicMessage.setText(getUserDataResponse()?.msg_ar)
+        binding.edtScrollMessage.setText(getAppConfig()?.scrollText)
 
         if (getUserDataResponse()?.voice_gender == Constants.MALE){
             binding.switchMale.isChecked = true
@@ -86,7 +87,8 @@ class ConfigDialogFragment : BaseActivity() {
                 isLogoChecked = binding.chkLogo.isChecked,
                 isPortraitChecked = binding.chkPortrait.isChecked,
                 isTimeChecked = binding.chkDateTime.isChecked,
-                isScrollArabic = binding.chkScroll.isChecked
+                isScrollArabic = binding.chkScroll.isChecked,
+                scrollText = binding.edtScrollMessage.text.toString()
             )
         )
 
@@ -108,29 +110,6 @@ class ConfigDialogFragment : BaseActivity() {
     }
 
     private fun onClickListeners(){
-       /* binding.conEnglish.setOnClickListener {
-            showSelected(binding.ivEnglish)
-            showSelectedEditText(listOf(binding.edtEnglishMessage))
-            showSelectedTokenCounters(listOf(binding.linTokenCounterEn))
-        }
-
-        binding.conArabic.setOnClickListener {
-            showSelected(binding.ivArabic)
-            showSelectedEditText(listOf(binding.edtArabicMessage))
-            showSelectedTokenCounters(listOf(binding.linTokenCounterAr))
-        }
-
-        binding.conEnglishArabic.setOnClickListener {
-            showSelected(binding.ivEnglishArabic)
-            showSelectedEditText(listOf(binding.edtEnglishMessage,binding.edtArabicMessage))
-            showSelectedTokenCounters(listOf(binding.linTokenCounterEn,binding.linTokenCounterAr))
-        }
-
-        binding.conArabicEnglish.setOnClickListener {
-            showSelected(binding.ivArabicEnglish)
-            showSelectedEditText(listOf(binding.edtEnglishMessage,binding.edtArabicMessage))
-            showSelectedTokenCounters(listOf(binding.linTokenCounterEn,binding.linTokenCounterAr))
-        }*/
 
         binding.switchMale.setOnCheckedChangeListener { view, isChecked ->
             if (isChecked) {
@@ -142,6 +121,14 @@ class ConfigDialogFragment : BaseActivity() {
             if (isChecked) {
                 gender = Constants.FEMALE
                 binding.switchMale.isChecked = false
+            }
+        }
+
+        binding.chkScroll.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked){
+                binding.edtScrollMessage.hint = "Please enter arabic scroll message"
+            }else {
+                binding.edtScrollMessage.hint = "Please enter english scroll message"
             }
         }
 

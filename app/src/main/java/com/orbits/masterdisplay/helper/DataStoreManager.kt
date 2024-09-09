@@ -8,11 +8,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.orbits.masterdisplay.helper.DataStoreManager.PreferencesKeys.APP
 import com.orbits.masterdisplay.helper.DataStoreManager.PreferencesKeys.STORE
-import com.orbits.masterdisplay.helper.DataStoreManager.PreferencesKeys.USER_DEEPLINK_DATA
 import com.orbits.masterdisplay.helper.DataStoreManager.PreferencesKeys.USER_REMEMBER_DATA
 import com.orbits.masterdisplay.helper.DataStoreManager.PreferencesKeys.USER_RESPONSE_DATA
 import com.orbits.masterdisplay.helper.helper_model.AppConfigModel
-import com.orbits.masterdisplay.helper.helper_model.DeepLinkModel
 import com.orbits.masterdisplay.helper.helper_model.ServerAddressModel
 import com.orbits.masterdisplay.helper.helper_model.UserRememberDataModel
 import com.orbits.masterdisplay.helper.helper_model.UserResponseModel
@@ -29,22 +27,10 @@ class DataStoreManager(val context: Context) {
     private object PreferencesKeys {
         val USER_RESPONSE_DATA = stringPreferencesKey("response_data")
         val USER_REMEMBER_DATA = stringPreferencesKey("user_remember_data")
-        val USER_DEEPLINK_DATA = stringPreferencesKey("deeplink_response_data")
         val STORE = stringPreferencesKey("store")
         val APP = stringPreferencesKey("application")
     }
 
-    suspend fun saveDeeplinkModel(responseModel: DeepLinkModel?) {
-        instance.edit { preferences ->
-            preferences[USER_DEEPLINK_DATA] = Gson().toJson(responseModel)
-        }
-    }
-
-    suspend fun getDeeplinkModel() : Flow<DeepLinkModel?> {
-        return instance.data.map { preferences ->
-            Gson().fromJson(preferences[USER_DEEPLINK_DATA] ?: "" , DeepLinkModel::class.java)
-        }
-    }
 
     suspend fun saveAppConfig(responseModel: AppConfigModel) {
         instance.edit { preferences ->
@@ -88,14 +74,5 @@ class DataStoreManager(val context: Context) {
             val dataObject = gson.fromJson(responseData, UserResponseModel::class.java)
             dataObject
         }
-    }
-
-
-    suspend fun clearDataStore() = instance.edit {
-        it.remove(USER_RESPONSE_DATA)
-    }
-
-    suspend fun clearRememberDataStore() = instance.edit {
-        it.remove(USER_REMEMBER_DATA)
     }
 }

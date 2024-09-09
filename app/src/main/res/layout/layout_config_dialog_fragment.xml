@@ -584,6 +584,24 @@
 
                 </LinearLayout>
 
+
+                <EditText
+                    android:id="@+id/edtScrollMessage"
+                    style="@style/CommonInputEditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_70sdp"
+                    android:layout_marginHorizontal="@dimen/screen_margin"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:gravity="top"
+                    android:hint="@string/enter_english_message"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine"
+                    android:maxLines="8"
+                    android:paddingTop="@dimen/_10sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linTokenCounterEn" />
+
             </LinearLayout>
         </ScrollView>
 
@@ -616,5 +634,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

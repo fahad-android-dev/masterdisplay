@@ -115,12 +115,10 @@ class MainActivity : BaseActivity()  , NetworkListener, TextToSpeech.OnInitListe
                 .toString() + "/MasterDisplay_Config/Config.xls")
 
 
-        val scrollTextValue = excelValue[Constants.SCROLL_TEXT]
-        val scrollTextColor = excelValue[Constants.SCROLL_TEXT_COLOR]
+        val scrollTextValue = getAppConfig()?.scrollText
         if (scrollTextValue != null) {
             binding.scrollText.startScroll()
             binding.scrollText.text = scrollTextValue
-//            binding.scrollText.setTextColor(Color.parseColor(scrollTextColor))
         }
 
     }

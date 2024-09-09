@@ -28,4 +28,5 @@ data class AppConfigModel(
     var isPortraitChecked: Boolean = false,
     var isTimeChecked: Boolean = false,
     var isScrollArabic: Boolean = false,
+    var scrollText: String? = null,
 )
