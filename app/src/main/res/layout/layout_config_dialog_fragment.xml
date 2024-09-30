@@ -68,16 +68,24 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edtAddress" />
 
-                <!--<Spinner
-                    android:id="@+id/spinnerSelectCounter"
+
+                <EditText
+                    android:id="@+id/edtServices"
+                    style="@style/CommonInputEditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edt_height"
                     android:layout_marginHorizontal="@dimen/_20sdp"
-                    android:background="@drawable/bg_edit_text"
                     android:layout_marginTop="@dimen/_15sdp"
-                    android:padding="8dp"
-                    android:spinnerMode="dropdown"
-                    android:dropDownWidth="match_parent" />-->
+                    android:hint="@string/select_service"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:imeOptions="actionDone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edtAddress" />
+
+
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

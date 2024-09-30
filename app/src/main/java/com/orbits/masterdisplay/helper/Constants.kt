@@ -42,6 +42,7 @@ object Constants {
 
     const val SCROLL_TEXT = "ScrollText"
     const val SCROLL_TEXT_COLOR = "ScrollTextColor"
+    const val SERVICES = "Services"
 
 
 

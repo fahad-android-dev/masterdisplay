@@ -1,24 +1,29 @@
 package com.orbits.masterdisplay.helper
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.app.Dialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.orbits.masterdisplay.R
 import com.orbits.masterdisplay.databinding.LayoutToolbarBinding
 import com.orbits.masterdisplay.helper.interfaces.CommonInterfaceClickEvent
+import com.orbits.masterdisplay.mvvm.main.view_model.MainViewModel
 
 
 open class BaseActivity : AppCompatActivity() {
     private var progressDialog: Dialog? = null
+    lateinit var viewModel: MainViewModel
     private var layoutToolbarBinding: LayoutToolbarBinding? = null
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this@BaseActivity)[MainViewModel::class.java]
     }
 
     override fun attachBaseContext(newBase: Context) {

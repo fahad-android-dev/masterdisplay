@@ -1,6 +1,9 @@
 package com.orbits.masterdisplay.helper
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
@@ -10,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.orbits.masterdisplay.R
 import com.orbits.masterdisplay.databinding.LayoutConfigDialogFragmentBinding
 import com.orbits.masterdisplay.helper.PrefUtils.getAppConfig
@@ -21,6 +25,9 @@ import com.orbits.masterdisplay.helper.PrefUtils.setUserDataResponse
 import com.orbits.masterdisplay.helper.helper_model.AppConfigModel
 import com.orbits.masterdisplay.helper.helper_model.ServerAddressModel
 import com.orbits.masterdisplay.helper.helper_model.UserResponseModel
+import com.orbits.masterdisplay.mvvm.main.model.ItemListDataModel
+import com.orbits.masterdisplay.mvvm.main.model.ServiceListDataModel
+import com.orbits.masterdisplay.mvvm.main.view_model.MainViewModel
 
 class ConfigDialogFragment : BaseActivity() {
     private lateinit var binding: LayoutConfigDialogFragmentBinding
@@ -37,7 +44,9 @@ class ConfigDialogFragment : BaseActivity() {
 
 
     private fun initializeFields(){
+
         setSpinner()
+        binding.edtServices.setText(getServerAddress()?.services)
         if (getServerAddress()?.ipAddress?.isNotEmpty() == true){
             binding.edtAddress.setText(getServerAddress()?.ipAddress)
             binding.edtPort.setText(getServerAddress()?.port)
@@ -47,7 +56,6 @@ class ConfigDialogFragment : BaseActivity() {
         binding.chkDateTime.isChecked = getAppConfig()?.isTimeChecked == true
         binding.chkScroll.isChecked = getAppConfig()?.isScrollArabic == true
 
-        // voice data
 
         binding.edtEnglishMessage.setText(getUserDataResponse()?.msg_en)
         binding.edtArabicMessage.setText(getUserDataResponse()?.msg_ar)
@@ -79,6 +87,7 @@ class ConfigDialogFragment : BaseActivity() {
                 showSelectedTokenCounters(listOf(binding.linTokenCounterEn,binding.linTokenCounterAr))
             }
         }
+
     }
 
     private fun setPositiveButtonData(){
@@ -94,7 +103,9 @@ class ConfigDialogFragment : BaseActivity() {
 
         saveServerAddress(
             ServerAddressModel(
-                ipAddress = binding.edtAddress.text.toString(), port = binding.edtPort.text.toString()
+                ipAddress = binding.edtAddress.text.toString(),
+                port = binding.edtPort.text.toString(),
+                services = binding.edtServices.text.toString()
 
             )
         )
@@ -104,7 +115,7 @@ class ConfigDialogFragment : BaseActivity() {
                 voice_selected = selectedOption,
                 msg_en = binding.edtEnglishMessage.text.toString(),
                 msg_ar = binding.edtArabicMessage.text.toString(),
-                voice_gender = gender
+                voice_gender = gender,
             )
         )
     }
@@ -174,23 +185,71 @@ class ConfigDialogFragment : BaseActivity() {
             System.exit(0)
         }
 
+
+        binding.edtPort.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // Check if four characters are written
+                if (s?.length == 4) {
+                    if (intent.getSerializableExtra("data") == null){
+                        viewModel.connectWebSocket(
+                            binding.edtAddress.text.toString(),
+                            binding.edtPort.text.toString(),
+                        )
+                    }
+
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Do something before text is changed, if needed
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Do something while text is being changed, if needed
+            }
+        })
+
+
+        binding.edtServices.setOnClickListener {
+            val list = intent.getSerializableExtra("data") as ArrayList<ServiceListDataModel>
+            val selectedServices = BooleanArray(list.size) { false } // Keep track of selected services
+            val selectedItems = mutableListOf<String>()
+
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Select Services")
+
+            val serviceNames = list.map { it.id }.toTypedArray()
+            println("here is service names ${serviceNames.size}")
+            println("here is dataList ${list}")
+
+            builder.setMultiChoiceItems(serviceNames, selectedServices) { dialog, which, isChecked ->
+                // Update selected services
+                if (isChecked) {
+                    selectedItems.add(serviceNames[which] ?: "")
+                } else {
+                    selectedItems.remove(serviceNames[which])
+                }
+            }
+
+            // Set positive button
+            builder.setPositiveButton("OK") { dialog, _ ->
+                // Update EditText with selected items, comma separated
+                binding.edtServices.setText(selectedItems.joinToString(","))
+            }
+
+            // Set negative button
+            builder.setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            // Show the dialog
+            builder.show()
+        }
+
     }
 
-    private fun showSelected(imageViewToShow: ImageView) {
-        val imageViews = listOf(
-            binding.ivEnglish,
-            binding.ivArabic,
-            binding.ivEnglishArabic,
-            binding.ivArabicEnglish
-        )
-
-        imageViews.forEach { it.visibility = ImageView.GONE }
-
-        imageViewToShow.visibility = ImageView.VISIBLE
-    }
 
     private fun showSelectedEditText(editTextsToShow: List<EditText>) {
-        // List of all EditTexts you want to control
         val allEditTexts = listOf(
             binding.edtEnglishMessage,
             binding.edtArabicMessage,
@@ -203,7 +262,6 @@ class ConfigDialogFragment : BaseActivity() {
     }
 
     private fun showSelectedTokenCounters(tokenCounters: List<LinearLayout>) {
-        // List of all EditTexts you want to control
         val allLinear = listOf(
             binding.linTokenCounterEn,
             binding.linTokenCounterAr,
@@ -240,7 +298,7 @@ class ConfigDialogFragment : BaseActivity() {
                         showSelectedEditText(listOf(binding.edtEnglishMessage))
                         showSelectedTokenCounters(listOf(binding.linTokenCounterEn))
                     }
-                    "Arabic" ->{
+                    "Arabic" -> {
                         showSelectedEditText(listOf(binding.edtArabicMessage))
                         showSelectedTokenCounters(listOf(binding.linTokenCounterAr))
                     }
@@ -269,4 +327,5 @@ class ConfigDialogFragment : BaseActivity() {
             }
         }
     }
+
 }

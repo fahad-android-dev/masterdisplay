@@ -7,7 +7,9 @@ import com.orbits.masterdisplay.helper.WebSocketClient
 import com.orbits.masterdisplay.helper.interfaces.MessageListener
 import com.orbits.masterdisplay.helper.interfaces.ReconnectionListener
 import com.orbits.masterdisplay.mvvm.main.model.ItemListDataModel
+import com.orbits.masterdisplay.mvvm.main.model.ServiceListDataModel
 import com.orbits.masterdisplay.mvvm.main.model.parseJsonData
+import com.orbits.masterdisplay.mvvm.main.model.parseServiceJsonData
 
 class MainViewModel : ViewModel() , MessageListener {
 
@@ -17,6 +19,7 @@ class MainViewModel : ViewModel() , MessageListener {
     var webSocketClient: WebSocketClient? = null
     var dataModel: JsonObject? = null
     var dataList = ArrayList<ItemListDataModel>()
+    var serviceList = ArrayList<ServiceListDataModel>()
     private var reconnectionListener :  ReconnectionListener?= null
     var isNext = false
 
@@ -25,7 +28,7 @@ class MainViewModel : ViewModel() , MessageListener {
     }
 
 
-    fun connectWebSocket(ipAddress: String, port: String) {
+    fun connectWebSocket(ipAddress: String, port: String,services : String? = "") {
         webSocketClient = WebSocketClient("ws://$ipAddress:$port",this)
         webSocketClient?.connect()
 
@@ -34,6 +37,7 @@ class MainViewModel : ViewModel() , MessageListener {
         isConnected = true
         val jsonObject = JsonObject()
         jsonObject.addProperty("masterDisplayConnection", "masterDisplayConnection")
+        if (!services.isNullOrEmpty()) jsonObject.addProperty("services", services)
 
         if (isConnected) {
             webSocketClient?.sendMessage(jsonObject)
@@ -44,10 +48,6 @@ class MainViewModel : ViewModel() , MessageListener {
 
     }
 
-
-    fun sendMessage(message: JsonObject) {
-        webSocketClient?.sendMessage(message)
-    }
 
 
     override fun onCleared() {
@@ -66,20 +66,26 @@ class MainViewModel : ViewModel() , MessageListener {
             dataModel = jsonObject
             println("here is data with token $dataModel")
 
-        }else {
+        }
+        else {
+            val services = parseServiceJsonData(jsonObject)
+            println("Parsed services items: $services")
+            serviceList.clear()
+            serviceList.addAll(services)
+
             val transactions = parseJsonData(jsonObject)
             println("Parsed items: $transactions")
             dataList.clear()
             dataList.addAll(transactions)
-
             reconnectionListener?.onConnectionRestarted()
         }
 
     }
 
-    fun sendReConnectionMessage() {
+    fun sendReConnectionMessage(services : String? = "") {
         val jsonObject = JsonObject()
         jsonObject.addProperty("masterReconnection", "masterReconnection")
+        if (!services.isNullOrEmpty()) jsonObject.addProperty("services", services)
 
         webSocketClient?.sendMessage(jsonObject)
         Log.d("Connection Message", "Sending message: $jsonObject")

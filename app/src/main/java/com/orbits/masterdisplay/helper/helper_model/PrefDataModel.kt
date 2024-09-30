@@ -3,6 +3,7 @@ package com.orbits.masterdisplay.helper.helper_model
 data class ServerAddressModel(
     val ipAddress: String? = null,
     val port: String? = null,
+    var services: String? = null,
     val code: String? = null,
 
 )

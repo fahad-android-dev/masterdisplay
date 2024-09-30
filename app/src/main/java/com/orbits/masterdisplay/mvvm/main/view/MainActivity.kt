@@ -40,7 +40,6 @@ import java.util.Locale
 class MainActivity : BaseActivity()  , NetworkListener, TextToSpeech.OnInitListener {
     private lateinit var binding: ActivityMainBinding
     private var networkChecker : NetworkChecker?= null
-    lateinit var viewModel: MainViewModel
     private lateinit var networkMonitor: NetworkMonitor
     private var pos = 0
     private var isAppStarted = false
@@ -50,10 +49,10 @@ class MainActivity : BaseActivity()  , NetworkListener, TextToSpeech.OnInitListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         networkChecker = NetworkChecker(this)
         networkChecker?.setNetworkListener(this)
         textToSpeech = TextToSpeech(this, this)
+        println("here is dataList 111 ${viewModel.serviceList}")
 
         if (getAppConfig()?.isPortraitChecked != true){
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -70,9 +69,11 @@ class MainActivity : BaseActivity()  , NetworkListener, TextToSpeech.OnInitListe
 
     private fun initializeFields() {
         if (!getServerAddress()?.ipAddress.isNullOrEmpty()){
+            println("here is services selected ${getServerAddress()?.services ?: ""}")
             viewModel.connectWebSocket(
                 getServerAddress()?.ipAddress ?: "",
-                getServerAddress()?.port ?: ""
+                getServerAddress()?.port ?: "",
+                getServerAddress()?.services ?: ""
             )
         }
 
@@ -135,6 +136,7 @@ class MainActivity : BaseActivity()  , NetworkListener, TextToSpeech.OnInitListe
     private fun onClickListeners(){
         binding.main.setOnLongClickListener {
             val intent = Intent(this@MainActivity, ConfigDialogFragment::class.java)
+            intent.putExtra("data", viewModel.serviceList)
             startActivity(intent)
             true
         }
@@ -251,7 +253,9 @@ class MainActivity : BaseActivity()  , NetworkListener, TextToSpeech.OnInitListe
         networkMonitor = NetworkMonitor(this) {
             if (!isAppStarted){
                 if (!getServerAddress()?.ipAddress.isNullOrEmpty()){
-                    viewModel.sendReConnectionMessage()
+                    viewModel.sendReConnectionMessage(
+                        getServerAddress()?.services
+                    )
                 }
             }
             isAppStarted = false

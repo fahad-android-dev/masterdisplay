@@ -20,4 +20,5 @@
     <string name="enter_english_message">Enter english message</string>
     <string name="enter_arabic_message">Enter arabic message</string>
     <string name="app_settings">App Settings</string>
+    <string name="select_service">Select Service</string>
 </resources>
